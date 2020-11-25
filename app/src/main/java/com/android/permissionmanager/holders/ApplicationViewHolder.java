@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.permissionmanager.R;
 
-public class MyViewHolder extends RecyclerView.ViewHolder {
+public class ApplicationViewHolder extends RecyclerView.ViewHolder {
 
     public TextView name;
     public ImageView icon;
 
-    public MyViewHolder(@NonNull View itemView) {
+    public ApplicationViewHolder(@NonNull View itemView) {
         super(itemView);
 
         name = itemView.findViewById(R.id.name);

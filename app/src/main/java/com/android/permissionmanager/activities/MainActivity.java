@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.permissionmanager.R;
-import com.android.permissionmanager.adapters.CustomAdapter;
+import com.android.permissionmanager.adapters.ApplicationAdapter;
 import com.android.permissionmanager.model.ApplicationDetail;
 
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     List<PackageInfo> packageInfoList;
     RecyclerView recyclerViewInstalled;
     RecyclerView recyclerViewSystem;
-    LinearLayoutManager linearLayoutManager;
-    CustomAdapter customAdapter;
+    LinearLayoutManager linearLayoutManagerSystem, linearLayoutManagerInstalled;
+    ApplicationAdapter applicationAdapter;
     ArrayList<ApplicationDetail> packagesInstalled;
     ArrayList<ApplicationDetail> packagesSystem;
     String appName;
@@ -43,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        packageManager = getPackageManager();
-        packageInfoList = packageManager.getInstalledPackages(0);
-        packagesInstalled = new ArrayList<>();
-        packagesSystem = new ArrayList<>();
+        init();
 
         for (int i = 0; i < packageInfoList.size(); i++) {
 
@@ -66,19 +63,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        recyclerViewInstalled = findViewById(R.id.rv_installed);
-        customAdapter = new CustomAdapter(MainActivity.this, packagesInstalled);
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        applicationAdapter = new ApplicationAdapter(MainActivity.this, packagesInstalled);
+        recyclerViewInstalled.setLayoutManager(linearLayoutManagerInstalled);
+        recyclerViewInstalled.setAdapter(applicationAdapter);
 
-        recyclerViewInstalled.setLayoutManager(linearLayoutManager);
-        recyclerViewInstalled.setAdapter(customAdapter);
-
-        recyclerViewSystem = findViewById(R.id.rv_system);
-        customAdapter = new CustomAdapter(MainActivity.this, packagesSystem);
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-
-        recyclerViewSystem.setLayoutManager(linearLayoutManager);
-        recyclerViewSystem.setAdapter(customAdapter);
+        applicationAdapter = new ApplicationAdapter(MainActivity.this, packagesSystem);
+        recyclerViewSystem.setLayoutManager(linearLayoutManagerSystem);
+        recyclerViewSystem.setAdapter(applicationAdapter);
 
         if (isAccessibilitySettingsOn(getApplicationContext()) == 0) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -113,6 +104,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    void init() {
+        packageManager = getPackageManager();
+        packageInfoList = packageManager.getInstalledPackages(0);
+        packagesInstalled = new ArrayList<>();
+        packagesSystem = new ArrayList<>();
+        recyclerViewInstalled = findViewById(R.id.rv_installed);
+        recyclerViewSystem = findViewById(R.id.rv_system);
+        linearLayoutManagerInstalled = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManagerSystem = new LinearLayoutManager(getApplicationContext());
+
     }
 
 }

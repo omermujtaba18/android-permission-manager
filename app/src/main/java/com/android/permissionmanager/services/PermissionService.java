@@ -2,12 +2,24 @@ package com.android.permissionmanager.services;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.android.permissionmanager.activities.MainActivity;
+import com.google.gson.Gson;
+
+import java.util.List;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class PermissionService extends AccessibilityService {
-    private boolean PERMISSION_CLICK = false;
+    private String permission;
+    private String packageName;
+    private boolean PERMISSION_CLICK;
 
     public PermissionService() {
     }
@@ -44,60 +56,79 @@ public class PermissionService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-//        if(getEventType(event) == "TYPE_VIEW_CLICKED"){
-//            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-//            Uri uri = Uri.fromParts("package", getEventText(event), null);
-//            intent.setData(uri);
-//            startActivity(intent);
-//        }
 
-//        if(getEventType(event).equals("TYPE_WINDOW_STATE_CHANGED")){
-//            AccessibilityNodeInfo nodeInfo = event.getSource();
-//            Log.v(TAG, "ACC::onAccessibilityEvent: nodeInfo=" + nodeInfo);
-//            if (nodeInfo == null) {
-//                return;
-//            }
-//
-//            List<AccessibilityNodeInfo> permissions = nodeInfo.findAccessibilityNodeInfosByText("Permissions");
-//            for (AccessibilityNodeInfo node : permissions) {
-//                Log.v(TAG, "ACC::onAccessibilityEvent: Permission " + node.getText());
-//                if(node.getText().equals("Permissions")){
-//                    node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                }
-//            }
-//
-//            List<AccessibilityNodeInfo> permission = nodeInfo.findAccessibilityNodeInfosByText("Camera");
-//            for (AccessibilityNodeInfo node : permission) {
-//                Log.v(TAG, "ACC::onAccessibilityEvent: Camera " + node.getText());
-//                if(node.getText().equals("Camera")){
-//                    node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                }
-//            }
-//            List<AccessibilityNodeInfo> deny = nodeInfo.findAccessibilityNodeInfosByText("Deny");
-//            for (AccessibilityNodeInfo node : deny) {
-//                Log.v(TAG, "ACC::onAccessibilityEvent: Deny " + node);
-//                if(!PERMISSION_CLICK){
-//                    if(node.getText().equals("Deny")){
-//                        node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                        PERMISSION_CLICK = true;
-//                    }
-//                }
-//                Intent intent = new Intent(this, MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//            }
-//
-//            nodeInfo.recycle();
-//        }
-    }
+        String json = new Gson().toJson(event.getText());
 
-    public void clickPermissions(AccessibilityNodeInfo nodeInfo) {
+        if (json.contains("Revoke")) {
+            PERMISSION_CLICK = false;
+            json = json.replace("[", "").replace("]", "");
+            String[] text = json.split(" ");
+            permission = text[1];
 
-    }
+            AccessibilityNodeInfo nodeInfo = event.getSource();
+            if (nodeInfo == null) {
+                return;
+            }
 
-    public void clickCamera(AccessibilityNodeInfo nodeInfo) {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
 
+            Uri uri = Uri.fromParts("package", "" + packageName, null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
+
+        if (getEventType(event).equals("TYPE_WINDOW_STATE_CHANGED")) {
+            AccessibilityNodeInfo nodeInfo = event.getSource();
+            if (nodeInfo == null) {
+                return;
+            }
+
+            List<AccessibilityNodeInfo> name = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                name = nodeInfo.findAccessibilityNodeInfosByViewId(event.getPackageName() + ":id/app_package");
+            }
+            for (AccessibilityNodeInfo node : name) {
+                packageName = node.getText().toString();
+            }
+
+
+            List<AccessibilityNodeInfo> permissions = nodeInfo.findAccessibilityNodeInfosByText("Permissions");
+            for (AccessibilityNodeInfo node : permissions) {
+                if (node.getText().equals("Permissions") && !node.getText().equals(permission) && !node.getText().equals("app")) {
+                    node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    Log.d("Service", "Click 1");
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+            List<AccessibilityNodeInfo> p = nodeInfo.findAccessibilityNodeInfosByText(permission);
+            for (AccessibilityNodeInfo innernode : p) {
+                if (innernode.getText().equals(permission)) {
+                    if (PERMISSION_CLICK)
+                        return;
+
+                    innernode.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    PERMISSION_CLICK = true;
+
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+            nodeInfo.recycle();
+        }
     }
 
     @Override

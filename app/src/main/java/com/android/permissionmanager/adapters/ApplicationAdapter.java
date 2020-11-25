@@ -5,38 +5,48 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.permissionmanager.R;
 import com.android.permissionmanager.activities.AppDetailActivity;
-import com.android.permissionmanager.holders.MyViewHolder;
+import com.android.permissionmanager.holders.ApplicationViewHolder;
 import com.android.permissionmanager.model.ApplicationDetail;
 
 import java.util.ArrayList;
 
-public class CustomAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationViewHolder> {
 
     ArrayList<ApplicationDetail> applicationDetails;
     Context context;
 
-    public CustomAdapter(Context context, ArrayList<ApplicationDetail> applicationDetails) {
+    public ApplicationAdapter(Context context, ArrayList<ApplicationDetail> applicationDetails) {
         this.context = context;
         this.applicationDetails = applicationDetails;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ApplicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        return new MyViewHolder(v);
+        return new ApplicationViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ApplicationViewHolder holder, final int position) {
         holder.name.setText(applicationDetails.get(position).getApplicationName());
         holder.icon.setImageDrawable(applicationDetails.get(position).appIcon);
+
+        holder.itemView.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
+                event.setEventType(AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
+                return super.onRequestSendAccessibilityEvent(host, child, event);
+            }
+        });
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

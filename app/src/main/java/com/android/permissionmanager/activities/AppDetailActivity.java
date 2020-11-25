@@ -6,16 +6,17 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.permissionmanager.R;
+import com.android.permissionmanager.adapters.PermissionAdapter;
 import com.android.permissionmanager.model.Permissions;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,10 @@ public class AppDetailActivity extends AppCompatActivity {
     PackageManager pm;
     Intent intent;
     ArrayList<Permissions> normalPermissions, signaturePermissions, dangerousPermissions;
+    RecyclerView rv_dangerous, rv_signature, rv_normal;
+    PermissionAdapter permissionAdapter;
+    LinearLayoutManager linearLayoutManagerN, linearLayoutManagerS, linearLayoutManagerD;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +62,15 @@ public class AppDetailActivity extends AppCompatActivity {
                     case PermissionInfo.PROTECTION_NORMAL:
                         normalPermissions.add(
                                 new Permissions(permission,
-                                        "",
                                         "Normal",
-                                        false,
-                                        "",
+                                        permissionInfo.loadLabel(pm).toString(),
                                         pm.checkPermission(permission, packageName) == PERMISSION_GRANTED));
                         break;
                     case PermissionInfo.PROTECTION_SIGNATURE:
                         signaturePermissions.add(
                                 new Permissions(permission,
-                                        "",
                                         "Signature",
-                                        false,
-                                        "",
+                                        permissionInfo.loadLabel(pm).toString(),
                                         pm.checkPermission(permission, packageName) == PERMISSION_GRANTED));
                         break;
                     case PermissionInfo.PROTECTION_DANGEROUS:
@@ -88,9 +89,17 @@ public class AppDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        permissionAdapter = new PermissionAdapter(AppDetailActivity.this, dangerousPermissions);
+        rv_dangerous.setLayoutManager(linearLayoutManagerD);
+        rv_dangerous.setAdapter(permissionAdapter);
 
-        String json = new Gson().toJson(dangerousPermissions);
-        Log.d(TAG, json);
+        permissionAdapter = new PermissionAdapter(AppDetailActivity.this, signaturePermissions);
+        rv_signature.setLayoutManager(linearLayoutManagerS);
+        rv_signature.setAdapter(permissionAdapter);
+
+        permissionAdapter = new PermissionAdapter(AppDetailActivity.this, normalPermissions);
+        rv_normal.setLayoutManager(linearLayoutManagerN);
+        rv_normal.setAdapter(permissionAdapter);
 
         tv_appDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,5 +124,14 @@ public class AppDetailActivity extends AppCompatActivity {
         normalPermissions = new ArrayList<>();
         signaturePermissions = new ArrayList<>();
         dangerousPermissions = new ArrayList<>();
+
+        rv_dangerous = findViewById(R.id.rv_dangerous);
+        rv_signature = findViewById(R.id.rv_signature);
+        rv_normal = findViewById(R.id.rv_normal);
+
+        linearLayoutManagerD = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManagerN = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManagerS = new LinearLayoutManager(getApplicationContext());
+
     }
 }

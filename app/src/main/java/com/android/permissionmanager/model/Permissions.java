@@ -18,6 +18,15 @@ public class Permissions {
         this.isGranted = isGranted;
     }
 
+    public Permissions(String permissionName, String protectionLevel, String description, boolean isGranted) {
+        this.permissionName = permissionName;
+        this.permissionGroup = "Undefined";
+        this.protectionLevel = protectionLevel;
+        this.isModifiable = false;
+        this.description = description;
+        this.isGranted = isGranted;
+    }
+
     public boolean isGranted() {
         return isGranted;
     }

@@ -1,82 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="#d3d3d3"
+    android:orientation="vertical"
+    android:paddingBottom="8dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/cardview_light_background"
-        app:cardElevation="2dp"
-        app:cardUseCompatPadding="true">
+        app:cardBackgroundColor="@color/cardview_light_background">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
                 android:text="Permission"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:paddingBottom="2sp"></TextView>
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/app_permission"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:paddingBottom="5dp"
                 android:text="android.permission.ACCESS_COARSE_LOCATION"
-                android:paddingBottom="5sp"></TextView>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Status"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:paddingBottom="2sp"></TextView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="Dangerous"
-                android:paddingBottom="5sp"></TextView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
                 android:text="Permission Description"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:paddingBottom="2sp"></TextView>
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/app_permission_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:paddingBottom="5dp"
                 android:text="Access coarse location sources, such as the mobile network database, to determine an approximate phone location, where available."
-                android:paddingBottom="5sp"></TextView>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Malicious Use"
+                android:paddingBottom="2dp"
+                android:text="Protection Level"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:paddingBottom="2sp"></TextView>
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/app_permission_protection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="Dangerous"
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Malicious applications can use this to determine approximately where you are."
-                android:textSize="14sp"
-                android:paddingBottom="5sp"></TextView>
+                android:paddingBottom="2dp"
+                android:text="Is this permission modifiable?"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/app_permission_modifiable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="Yes"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
+                android:text="Status"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/app_permission_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="14dp"
+                android:text="Granted"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/revoke"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FF0000"
+                android:padding="8dp"
+                android:text="Revoke Permission"
+                android:textAllCaps="false"
+                android:textColor="@color/cardview_light_background"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

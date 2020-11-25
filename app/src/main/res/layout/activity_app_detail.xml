@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.AppDetailActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activities.AppDetailActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,8 +23,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/app_name"
@@ -53,17 +53,75 @@
             android:id="@+id/app_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Delete this application?"
             android:gravity="right"
+            android:text="Delete this application?"
             android:textColor="#FF0000"
             android:textStyle="bold" />
 
     </LinearLayout>
 
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:padding="14dp"
+                android:text="Dangerous Permissions"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:itemCount="1"
+                tools:listitem="@layout/app_detail_item"
+                android:id="@+id/rv_dangerous" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:padding="14dp"
+                android:text="Signature Permissions"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:itemCount="1"
+                tools:listitem="@layout/app_detail_item"
+                android:id="@+id/rv_signature" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:padding="14dp"
+                android:text="Normal Permissions"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:itemCount="1"
+                tools:listitem="@layout/app_detail_item"
+                android:id="@+id/rv_normal" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>
